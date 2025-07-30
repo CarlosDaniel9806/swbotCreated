@@ -50,7 +50,7 @@ public class Producto {
     @Column(nullable = false)
     private Long cantidad;
     
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY) // 
     @Column(name = "imagenes_url")
     private List<String> imagenes;  // Rutas relativas a cada imagen
    

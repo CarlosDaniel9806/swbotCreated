@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -145,4 +146,21 @@ public boolean delete(String filename) {
         return false;
     }
 }
+    public List<String> copyMultiple(MultipartFile[] files) throws IOException {
+        List<String> nombresGuardados = new ArrayList<>();
+
+        if (files == null || files.length == 0) {
+            return nombresGuardados;
+        }
+
+        for (MultipartFile file : files) {
+            if (file != null && !file.isEmpty()) {
+                String nombreArchivo = this.copy(file);
+                nombresGuardados.add(nombreArchivo);
+            }
+        }
+
+        return nombresGuardados;
+    }
 }
+
