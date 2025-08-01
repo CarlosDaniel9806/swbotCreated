@@ -24,9 +24,6 @@ import com.web.swbotv1.model.Producto;
 import lombok.RequiredArgsConstructor;
 
 
-
-
-
 @Service
 @Transactional  /* Si todo el método se ejecuta correctamente, los cambios en la base de datos se confirman (commit).
                 Si ocurre una excepción, todos los cambios se revierten (rollback), evitando datos inconsistentes. */
