@@ -8,7 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +37,9 @@ public class CategoriaController {
     private final ICategoriaService categoriaService;
     private final ICategoriaMapper iCategoriaMapper;
 
+
+    /* ........................EndPoint De Update o Editar Categoria......................... */
+    
    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<CategoriaDto> crearCategoria(
     @RequestParam("nombreCategoria") String nombreCategoria,
@@ -57,4 +62,20 @@ public ResponseEntity<CategoriaDto> crearCategoria(
                                      .collect(Collectors.toList());
         return ResponseEntity.ok(responseDtos);
     }
+
+
+    /* ........................EndPoint De Update o Editar Categoria......................... */
+@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<CategoriaDto> actualizarCategoria(
+    @PathVariable Long id,
+    @RequestParam("nombreCategoria") String nombreCategoria,
+    @RequestParam(value = "imagen", required = false) MultipartFile imagen
+) {
+    CategoriaDto dto = new CategoriaDto();
+    dto.setNombreCategoria(nombreCategoria);
+
+    Categoria categoria = categoriaService.updateCustom(id, dto, imagen);
+    CategoriaDto dtoRespuesta = iCategoriaMapper.toDto(categoria);
+    return ResponseEntity.ok(dtoRespuesta);
+}
 }

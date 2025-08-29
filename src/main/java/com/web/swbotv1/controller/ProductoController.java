@@ -18,6 +18,7 @@ import com.web.swbotv1.mapper.IProductoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -72,6 +73,9 @@ public ResponseEntity<List<ProductoDto>> getAllProductos() {
 
     return ResponseEntity.ok(responseDtos); // Devuelve la lista con 200 OK
 }
+
+    /* ........................EndPoint De Update o Editar Producto......................... */
+
 }
 
 

@@ -11,5 +11,6 @@ public interface ICategoriaService extends IBaseInterfaceService <Categoria, Lon
     
     Categoria createCustom (CategoriaDto entidad, MultipartFile imagen); // este es la firma del metodo createCustom que se implementa en la clase CategoriaServiceImpl
     
+    Categoria updateCustom(Long id, CategoriaDto dto, MultipartFile imagen); // este es la firma para el metodo updateCustom que se implementa en la clase CategoriaServiceImpl
   
 }

@@ -40,6 +40,9 @@ public class CategoriaServiceImpl extends CRUDimpl<Categoria, Long>  implements 
 
     
     private final IUploadFileService uploadFileService;
+    
+
+    /* ........................Metodo De createCustom o Crear Categoria con Imagen ......................... */
 
     @Override
 public Categoria createCustom(CategoriaDto dto, MultipartFile imagen) {
@@ -76,5 +79,39 @@ public Categoria createCustom(CategoriaDto dto, MultipartFile imagen) {
     return super.create(categoria);
 }
 
-  
+/* ........................Metodo De Update o Editar Categoria......................... */
+
+  @Override
+public Categoria updateCustom(Long id, CategoriaDto dto, MultipartFile imagen) {
+    // 1. Verificar que la categoría existe
+    Categoria categoriaExistente = super.readById(id);
+    
+    // 2. Validar si el nuevo nombre ya existe (solo si cambió)
+    if (!categoriaExistente.getNombreCategoria().equalsIgnoreCase(dto.getNombreCategoria().trim())) {
+        Optional<Categoria> existente = iCategoriaRepository.findByNombreCategoriaIgnoreCase(dto.getNombreCategoria().trim());
+        if (existente.isPresent()) {
+            throw new BussinessRuleException(
+                "CATEGORIA_DUPLICADA",
+                "La categoría '" + dto.getNombreCategoria().trim() + "' ya existe.",
+                HttpStatus.CONFLICT
+            );
+        }
+    }
+
+    // 3. Actualizar nombre
+    categoriaExistente.setNombreCategoria(dto.getNombreCategoria().trim());
+
+    // 4. Actualizar imagen si se proporciona una nueva
+    if (imagen != null && !imagen.isEmpty()) {
+        try {
+            String nombreImagen = uploadFileService.copy(imagen);
+            categoriaExistente.setImagenUrl("/uploads/" + nombreImagen);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al subir la imagen: " + e.getMessage(), e);
+        }
+    }
+
+    // 5. Guardar y retornar
+    return super.update(categoriaExistente, id);
+}
 }

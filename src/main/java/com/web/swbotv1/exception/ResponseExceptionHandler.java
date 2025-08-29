@@ -92,6 +92,4 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler { /
         CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(), msg, request.getDescription(false)  );
         return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR) ;
     }
-
-
 }

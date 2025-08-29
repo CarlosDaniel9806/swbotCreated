@@ -42,7 +42,6 @@ public class ProductoDto implements Serializable {
     @NotBlank(message = "El nombre de la categoría no puede estar vacío")
     private String nombreCategoria;
 
-     
     // 🔥 🟢 Este es para devolver la URL de la imagen al frontend
     private List<String> imagenesUrl;
 }
