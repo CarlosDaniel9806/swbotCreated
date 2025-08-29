@@ -2,6 +2,9 @@ package com.web.swbotv1.Service.impl;
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.swbotv1.Dto.CategoriaDto;
 import com.web.swbotv1.Repo.ICategoriaRepository;
 import com.web.swbotv1.Repo.IGenericRepository;
+import com.web.swbotv1.Repo.IProductoRepository;
 import com.web.swbotv1.Service.ICategoriaService;
 import com.web.swbotv1.Service.IUploadFileService;
 import com.web.swbotv1.exception.BussinessRuleException;
@@ -31,6 +35,7 @@ public class CategoriaServiceImpl extends CRUDimpl<Categoria, Long>  implements 
     //Mapeo de Dto a Entity y viceversa
     private final ICategoriaMapper iCategoriaMapper; //Esta línea te permite usar el mapper para transformar objetos dentro de tu servicio
     private final ICategoriaRepository iCategoriaRepository; // Inyectamos el servicio de Categoria para poder obtener la categoria asociada al categoria
+    private final IProductoRepository iProductoRepository; // Inyectamos el repositorio de Producto
 
     // Pedimos al repositorio el Categoria getRepo
     @Override                                                   //esta linea es para sobreescribir el metodo de la clase padre CRUDimpl
@@ -114,4 +119,26 @@ public Categoria updateCustom(Long id, CategoriaDto dto, MultipartFile imagen) {
     // 5. Guardar y retornar
     return super.update(categoriaExistente, id);
 }
+
+    /* ........................Metodo Para Conteo de Productos......................... */
+
+    @Override
+    public Map<Long, Integer> countProductosPorCategoria() {
+        // Consulta para contar productos por categoría
+        List<Object[]> resultados = iProductoRepository.countProductosPorCategoria();
+        
+        // Convertir los resultados a un Map
+        Map<Long, Integer> conteo = new HashMap<>();
+        for (Object[] resultado : resultados) {
+            Long idCategoria = ((Number) resultado[0]).longValue();
+            Long cantidad = (Long) resultado[1];
+            conteo.put(idCategoria, cantidad.intValue());
+        }
+        
+        return conteo;
+    }
 }
+
+
+
+

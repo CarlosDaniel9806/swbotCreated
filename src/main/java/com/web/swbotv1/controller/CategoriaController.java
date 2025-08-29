@@ -1,6 +1,7 @@
 package com.web.swbotv1.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -77,5 +78,11 @@ public ResponseEntity<CategoriaDto> actualizarCategoria(
     Categoria categoria = categoriaService.updateCustom(id, dto, imagen);
     CategoriaDto dtoRespuesta = iCategoriaMapper.toDto(categoria);
     return ResponseEntity.ok(dtoRespuesta);
+}
+     /* ........................EndPoint Para Conteo de Productos......................... */
+@GetMapping("/count-productos")
+public ResponseEntity<Map<Long, Integer>> getConteoProductosPorCategoria() {
+    Map<Long, Integer> conteo = categoriaService.countProductosPorCategoria();
+    return ResponseEntity.ok(conteo);
 }
 }
