@@ -14,15 +14,13 @@ import com.web.swbotv1.model.Producto;
 
 public interface IProductoMapper {
     
- 
-
-    @Mapping(source = "categoria.nombreCategoria", target = "nombreCategoria")
+    
+    @Mapping(source = "imagenes", target = "imagenesUrl")
     ProductoDto toDto(Producto producto);
 
-    
     @InheritInverseConfiguration
-    @Mapping(target = "categoria", ignore = true) // se asignará manualmente en el servicio
-    Producto toEntity(ProductoDto producto);
+    @Mapping(target = "imagenes", source = "imagenesUrl")
+    Producto toEntity(ProductoDto productoDto);
 
     List<ProductoDto> toDtoList(List<Producto> productos);
 }

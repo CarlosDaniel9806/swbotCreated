@@ -30,51 +30,54 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public class ProductoController {
 
-     private final IProductoService service;
-    private final IProductoMapper iProductoMapper;
+    private final IProductoService service;
+    private final IProductoMapper productoMapper;
 
- // Endpoint 1: Crear producto (sin imágenes)
-@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-public ResponseEntity<ProductoDto> crearProducto(@RequestBody ProductoDto dto) {
-    ProductoDto creado = service.createProducto(dto);
-    return new ResponseEntity<>(creado, HttpStatus.CREATED);
-}
+    // Crear producto (sin imágenes)
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductoDto> crearProducto(@RequestBody ProductoDto dto) {
+        ProductoDto creado = service.createProducto(dto);
+        return new ResponseEntity<>(creado, HttpStatus.CREATED);
+    }
 
-// Endpoint 2: Subir imágenes
-@PostMapping(value = "/{id}/imagenes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-public ResponseEntity<ProductoDto> subirImagenes(
-    @RequestParam("imagenes") MultipartFile[] imagenes,
-    @PathVariable("id") Long idProducto
-) {
-    ProductoDto actualizado = service.subirImagenes(idProducto, imagenes);
-    return ResponseEntity.ok(actualizado);
-}
-    
+    // Subir imágenes
+    @PostMapping(value = "/{id}/imagenes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductoDto> subirImagenes(
+            @PathVariable("id") Long idProducto,
+            @RequestParam("imagenes") MultipartFile[] imagenes
+    ) {
 
-@GetMapping("/all")
-public ResponseEntity<List<ProductoDto>> getAllProductos() {
-    var productos = service.getAll(); // Obtiene lista de entidades Producto
+        if (imagenes == null || imagenes.length == 0) {
+            return ResponseEntity.badRequest().build();
+        }
 
-    var responseDtos = productos.stream()
-        .map(producto -> {
-            ProductoDto dto = iProductoMapper.toDto(producto);
+        ProductoDto actualizado = service.subirImagenes(idProducto, imagenes);
+        return ResponseEntity.ok(actualizado);
+    }
 
-            // Construir las URLs completas de imágenes
-            List<String> urls = producto.getImagenes() != null
-                ? producto.getImagenes().stream()
-                    .map(nombre -> "/uploads/" + nombre) // URL relativa
-                    .collect(Collectors.toList())
-                : List.of(); // lista vacía si no hay imágenes
+    // Obtener todos los productos
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductoDto>> getAllProductos() {
 
-            dto.setImagenesUrl(urls); // asignamos las URLs al DTO
-            return dto;
-        })
-        .collect(Collectors.toList());
+        var productos = service.getAll();
 
-    return ResponseEntity.ok(responseDtos); // Devuelve la lista con 200 OK
-}
+        var responseDtos = productos.stream()
+            .map(producto -> {
+                ProductoDto dto = productoMapper.toDto(producto);
 
-    /* ........................EndPoint De Update o Editar Producto......................... */
+                List<String> urls = (producto.getImagenes() != null)
+                    ? producto.getImagenes().stream()
+                        .map(nombre -> "/uploads/" + nombre)
+                        .collect(Collectors.toList())
+                    : List.of();
+
+                dto.setImagenesUrl(urls);
+                return dto;
+            })
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseDtos);
+    }
 
 }
 

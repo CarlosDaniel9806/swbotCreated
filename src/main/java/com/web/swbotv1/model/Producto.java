@@ -35,20 +35,6 @@ public class Producto {
 
     @Column(nullable = false, length = 70)
     private String nombreProducto;
-
-    @Column(nullable = false, length = 100)
-    private String descripcion;
-
-    @Column(nullable = false)
-    private Double precio;
-
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
-
-
-    @Column(nullable = false)
-    private Long cantidad;
     
     @ElementCollection(fetch = FetchType.LAZY) // 
     @Column(name = "imagenes_url")
